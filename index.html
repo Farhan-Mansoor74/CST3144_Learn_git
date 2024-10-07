@@ -1,44 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vue.js Pet Depot</title>
-		<!-- CDN link -->
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
-	</head>
-	<body>
-		<div id="app">
-			<header>
-				<h1 v-text="sitename"></h1>
-			</header>
 
-			<main>
-				<figure>
-                    <img v-bind:src = "product.image" style="height:30vh; width:30vh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js After School Clubs</title>
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1 v-text="sitename"></h1>
+            <button @click="showCheckout">
+                {{ cartItemCount }}
+                <span class="fas fa-cart-plus"></span> Checkout
+            </button>
+        </header>
+        <main>
+            <div v-if="showClubs">
+                <figure>
+                    <img v-bind:src="club.image" alt="Club Image" style="height: 30vh;">
                 </figure>
-                <h2 v-text="product.title"></h2>
-                <p v-html="product.description"></p>
+                <h2 v-text="club.subject"></h2>
+                <p v-html="club.description"></p>
+                <p>Location: {{club.location}}</p>
+                <p>Age Group: {{ club.ageGroup }}</p>
+                <p>Fee: {{ club.fee }} USD</p>
+                <button v-on:click="addToCart" v-if="canAddToCart"> Add to Cart </button>
+                <button disabled="disabled" v-else> Add to Cart </button>
+                <p> Cart has {{ cartItemCount }} clubs</p>
+            </div>
 
-                <p> Price: {{ product.price }}</p>
-			</main>
-		</div>
-		<script>
-			let webstore = new Vue({
-				el: "#app", // DOM mounting point
-				data: {
-					sitename: "Vue.js Pet Depot",
-					product: {
-						id: 1001,
-						title: "Cat Food, 25lb bag",
-						description:
-							"A 25 pound bag of <em> irrestible </em>" +
-							"organic goodness for your cat",
-						price: 2000,
-						image: "images/img.png",
-					},
-				},
-			});
-		</script>
-	</body>
+            <div v-else>
+                <h2>Checkout</h2>
+                <p>Number of Clubs Enrolled = {{ cartItemCount }} </p>
+            </div>
+        </main>
+    </div>
+
+    <script type="text/javascript">
+        let webstore = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'After School Club Registration',
+                club: {
+                    id: 2001,
+                    subject: 'Art & Craft',
+                    description: `Join our exciting Art & Craft club where students will explore their creativity by working on a variety of projects using different materials. Learn the fundamentals of colors, textures, and design while having fun!<br><br>
+                        Activities include:<br>
+                        1. Painting and drawing using different techniques.<br>
+                        2. Crafting with recycled materials.<br>
+                        3. Exploring 3D art forms like clay modeling and sculpture.<br>
+                        4. Collaborative group projects to build teamwork and communication skills.`,
+                    location: 'Community Center, Dubai, UAE',
+                    ageGroup: '6-12 years',
+                    fee: 50,
+                    image: 'images/art_craft.jpg',
+                    availableInventory: 20
+                },
+                showClubs: true,
+                cart: []
+            },
+            methods: {
+                addToCart: function () {
+                    this.cart.push(this.club.id);
+                },
+                showCheckout: function() {
+                    this.showClubs = !this.showClubs;
+                }
+            },
+            computed: {
+                cartItemCount: function () {
+                    return this.cart.length;
+                },
+                canAddToCart: function () {
+                    return this.club.availableInventory > this.cartItemCount;
+                }
+            }
+        });
+    </script>
+
+</body>
+
 </html>
